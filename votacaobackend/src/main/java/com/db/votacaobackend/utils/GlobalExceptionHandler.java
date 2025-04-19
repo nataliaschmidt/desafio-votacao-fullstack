@@ -2,6 +2,8 @@ package com.db.votacaobackend.utils;
 
 import com.db.votacaobackend.agenda.exception.AgendaBadRequestException;
 import com.db.votacaobackend.agenda.exception.AgendaNotFoundExcepcion;
+import com.db.votacaobackend.section.exception.SectionNotFoundException;
+import com.db.votacaobackend.vote.exception.VoteConflictException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -24,4 +26,15 @@ public class GlobalExceptionHandler {
   }
 
 
+  @ExceptionHandler(SectionNotFoundException.class)
+  private ResponseEntity<ErrorMessage> sectionNotFound(SectionNotFoundException exception) {
+    ErrorMessage errorMessage = new ErrorMessage(exception.getMessage());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+  }
+
+  @ExceptionHandler(VoteConflictException.class)
+  private ResponseEntity<ErrorMessage> voteBadRequest(VoteConflictException exception) {
+    ErrorMessage errorMessage = new ErrorMessage(exception.getMessage());
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
+  }
 }
