@@ -4,6 +4,7 @@ import com.db.votacaobackend.agenda.model.Agenda;
 import com.db.votacaobackend.agenda.service.AgendaService;
 import com.db.votacaobackend.section.dto.CreateSectionDTO;
 import com.db.votacaobackend.section.dto.SectionDetailsDTO;
+import com.db.votacaobackend.section.exception.SectionNotFoundException;
 import com.db.votacaobackend.section.mapper.SectionMapper;
 import com.db.votacaobackend.section.model.Section;
 import com.db.votacaobackend.section.repository.SectionRepository;
@@ -24,13 +25,13 @@ public class SectionService {
 
     Agenda agenda = agendaService.getById(section.agendaId());
 
-    Section newSession = createNewSection(section, agenda);
+    Section createdSection = createNewSection(section, agenda);
 
-    Section newSection = repository.save(newSession);
+    Section newSection = repository.save(createdSection);
     return mapper.toDto(newSection);
   }
 
-  private static Section createNewSection(CreateSectionDTO section, Agenda agenda) {
+  private Section createNewSection(CreateSectionDTO section, Agenda agenda) {
     LocalDateTime start = LocalDateTime.now();
     int duration = section.duration() != null ? section.duration() : 1;
 
@@ -39,6 +40,7 @@ public class SectionService {
         .end(LocalDateTime.now().plusMinutes(duration))
         .duration(duration)
         .agendaId(agenda)
+        .votes(null)
         .build();
   }
 
@@ -47,5 +49,10 @@ public class SectionService {
         .stream()
         .map(mapper::toDto)
         .toList();
+  }
+
+  public Section getById(Long id) throws SectionNotFoundException {
+    return repository.findById(id)
+        .orElseThrow(() -> new SectionNotFoundException("Sessão não encontrada!"));
   }
 }
