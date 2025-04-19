@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @EqualsAndHashCode
-
 public class Agenda {
 
   @Id
