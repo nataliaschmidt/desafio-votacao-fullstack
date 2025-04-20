@@ -1,5 +1,8 @@
 package com.db.votacaobackend.section.controller;
 
+import com.db.votacaobackend.agenda.dto.AgendaDTO;
+import com.db.votacaobackend.agenda.mapper.AgendaMapper;
+import com.db.votacaobackend.agenda.model.Agenda;
 import com.db.votacaobackend.section.dto.CreateSectionDTO;
 import com.db.votacaobackend.section.dto.SectionDetailsDTO;
 import com.db.votacaobackend.section.service.SectionService;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SectionController {
 
   private final SectionService service;
+  private final AgendaMapper agendaMapper;
 
   @PostMapping
   @Operation(
@@ -46,5 +50,13 @@ public class SectionController {
   public ResponseEntity<List<SectionDetailsDTO>> listAllSessions() {
     List<SectionDetailsDTO> openSections = service.listAllSessions();
     return ResponseEntity.status(HttpStatus.OK).body(openSections);
+  }
+  @GetMapping("/availiable-agendas")
+  public ResponseEntity<List<AgendaDTO>> listAllAvailiableAgendas(){
+    List<Agenda> availiableAgendas = service.listAllAvailiableAgendas();
+    List<AgendaDTO> availiableAgendasDto = availiableAgendas.stream()
+        .map(agendaMapper::toDto)
+        .toList();
+    return ResponseEntity.status(HttpStatus.OK).body(availiableAgendasDto);
   }
 }

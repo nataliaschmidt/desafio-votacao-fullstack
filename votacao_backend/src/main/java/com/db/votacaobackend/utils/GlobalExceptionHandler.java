@@ -3,6 +3,7 @@ package com.db.votacaobackend.utils;
 import com.db.votacaobackend.agenda.exception.AgendaBadRequestException;
 import com.db.votacaobackend.agenda.exception.AgendaNotFoundExcepcion;
 import com.db.votacaobackend.section.exception.SectionNotFoundException;
+import com.db.votacaobackend.vote.exception.VoteBadRequestException;
 import com.db.votacaobackend.vote.exception.VoteConflictException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,5 +37,11 @@ public class GlobalExceptionHandler {
   private ResponseEntity<ErrorMessage> voteBadRequest(VoteConflictException exception) {
     ErrorMessage errorMessage = new ErrorMessage(exception.getMessage());
     return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
+  }
+
+  @ExceptionHandler(VoteBadRequestException.class)
+  private ResponseEntity<ErrorMessage> voteBadRequest(VoteBadRequestException exception) {
+    ErrorMessage errorMessage = new ErrorMessage(exception.getMessage());
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
   }
 }

@@ -62,4 +62,15 @@ public class SectionService {
     return repository.findById(id)
         .orElseThrow(() -> new SectionNotFoundException("Sessão não encontrada!"));
   }
+
+  public List<Agenda> listAllAvailiableAgendas() {
+    List<SectionDetailsDTO> sectionList = listAllSessions();
+    List<Agenda> agendaIdsWithSession = sectionList.stream()
+        .map(SectionDetailsDTO::agendaId)
+        .toList();
+
+    return agendaService.listAllAgendas().stream()
+        .filter(agenda -> !agendaIdsWithSession.contains(agenda))
+        .toList();
+  }
 }
