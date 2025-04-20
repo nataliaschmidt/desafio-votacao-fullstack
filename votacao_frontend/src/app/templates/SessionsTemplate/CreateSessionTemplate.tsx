@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetAllAgendas } from '@/app/api/hookService/useAgendaService';
+import { useGetAllAvaiableAgendas } from '@/app/api/hookService/useAgendaService';
 import { useCreateSection } from '@/app/api/hookService/useSectionService';
 import Button from '@/app/components/Button';
 import Container from '@/app/components/Container';
@@ -28,7 +28,7 @@ export default function CreateSessionTemplate() {
 
   const router = useRouter();
 
-  const { data: allAgendas } = useGetAllAgendas({ sortByName: true });
+  const { data: allAgendas } = useGetAllAvaiableAgendas({ sortByName: true });
   const { mutate: createSection, isPending } = useCreateSection();
 
   const agendaOptions = React.useMemo(() => {

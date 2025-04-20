@@ -2,9 +2,10 @@ import { BASE_URL } from '../config/baseURL';
 import { ISection, TSectionBody } from '../types/section';
 
 export const sectionService = {
-  getAllOpenSection: async (): Promise<ISection[]> => {
+  getAllSection: async (isSectionOpen: boolean): Promise<ISection[]> => {
+    const PATH_URL = isSectionOpen ? '/section/open' : '/section';
     try {
-      const res = await fetch(`${BASE_URL}/section/open`);
+      const res = await fetch(`${BASE_URL}${PATH_URL}`);
       if (!res.ok) throw new Error('Erro ao carregar a listagem');
 
       const data: ISection[] = await res.json();

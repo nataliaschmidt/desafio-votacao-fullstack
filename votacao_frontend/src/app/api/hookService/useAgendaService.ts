@@ -6,10 +6,10 @@ const QUERY_KEYS = {
   allAgendas: 'allAgendas',
 };
 
-export const useGetAllAgendas = ({ sortByName = false }) => {
+export const useGetAllAvaiableAgendas = ({ sortByName = false }) => {
   return useQuery<IAgenda[], Error>({
     queryKey: [QUERY_KEYS.allAgendas],
-    queryFn: () => agendaService.getAllAgendas(sortByName),
+    queryFn: () => agendaService.getAllAvaiableAgendas(sortByName),
   });
 };
 

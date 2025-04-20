@@ -2,9 +2,9 @@ import { BASE_URL } from '../config/baseURL';
 import { IAgenda, TAgendaBody } from '../types/agenda';
 
 export const agendaService = {
-  getAllAgendas: async (sortByName = false): Promise<IAgenda[]> => {
+  getAllAvaiableAgendas: async (sortByName = false): Promise<IAgenda[]> => {
     try {
-      const res = await fetch(`${BASE_URL}/agenda`);
+      const res = await fetch(`${BASE_URL}/section/availiable-agendas`);
       if (!res.ok) throw new Error('Erro ao carregar a listagem');
 
       const data: IAgenda[] = await res.json();

@@ -52,7 +52,7 @@ export default function AgendaForm({ setOpenModalAgenda }: TAgendaFormProps) {
           />
         </Label>
         <div className="w-max">
-          <Button type="submit">Criar Agenda</Button>
+          <Button type="submit">Criar pauta</Button>
         </div>
       </form>
       {toastMessage && (

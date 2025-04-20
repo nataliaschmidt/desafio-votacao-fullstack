@@ -1,6 +1,5 @@
 'use client';
 
-import { useGetAllOpenSections } from '@/app/api/hookService/useSectionService';
 import { ISection } from '@/app/api/types/section';
 import Button from '@/app/components/Button';
 import Container from '@/app/components/Container';
@@ -11,6 +10,9 @@ import React, { useState } from 'react';
 import AgendaForm from './components/AgendaForm';
 import SectionCard from './components/SectionCard';
 import VoteForm from './components/VoteForm';
+import { useGetAllSections } from '@/app/api/hookService/useSectionService';
+import Link from 'next/link';
+import { FaArrowRight } from 'react-icons/fa';
 
 export default function ListSessionOpenTemplate() {
   const [openModalAgenda, setOpenModalAgenda] = useState<boolean>(false);
@@ -19,7 +21,9 @@ export default function ListSessionOpenTemplate() {
 
   const router = useRouter();
 
-  const { data: allOpenSections, isLoading } = useGetAllOpenSections();
+  const { data: allOpenSections, isLoading } = useGetAllSections({
+    isSectionsOPen: true,
+  });
 
   const onVoteClick = (id: number) => {
     setSelectedSection(id);
@@ -29,6 +33,13 @@ export default function ListSessionOpenTemplate() {
   return (
     <>
       <div className="my-10 flex flex-col items-start gap-4">
+        <Link
+          className="flex items-center justify-center gap-4 hover:text-green-700"
+          href="/sessoes/visualizarsessoes"
+        >
+          {' '}
+          <FaArrowRight /> Visualizar todas sessões
+        </Link>
         <Button onClick={() => setOpenModalAgenda(true)}>
           Criar nova pauta
         </Button>
@@ -47,11 +58,11 @@ export default function ListSessionOpenTemplate() {
           ) : allOpenSections.length > 0 ? (
             allOpenSections?.map((section: ISection) => (
               <Container key={section.id}>
-                <SectionCard onclick={onVoteClick} section={section} />
+                <SectionCard onVoteClick={onVoteClick} section={section} />
               </Container>
             ))
           ) : (
-            <p>Não há sessões cadastradas</p>
+            <p>Não há sessões abertas</p>
           )}
         </div>
       )}

@@ -3,13 +3,17 @@ import { sectionService } from '../service/sectionService';
 import { ISection, TSectionBody } from '../types/section';
 
 const QUERY_KEYS = {
-  allOpenSections: 'allOpenSections',
+  allSections: 'allSections',
 };
 
-export const useGetAllOpenSections = () => {
+export const useGetAllSections = ({
+  isSectionsOPen,
+}: {
+  isSectionsOPen: boolean;
+}) => {
   return useQuery<ISection[], Error>({
-    queryKey: [QUERY_KEYS.allOpenSections],
-    queryFn: sectionService.getAllOpenSection,
+    queryKey: [QUERY_KEYS.allSections],
+    queryFn: () => sectionService.getAllSection(isSectionsOPen),
   });
 };
 
@@ -19,7 +23,7 @@ export const useCreateSection = () => {
   return useMutation({
     mutationFn: (body: TSectionBody) => sectionService.create(body),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.allOpenSections] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.allSections] });
     },
   });
 };
