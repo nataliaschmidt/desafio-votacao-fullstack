@@ -14,7 +14,7 @@ type TFormValues = {
   cpf: string;
 };
 
-export default function HomePageTemplate() {
+export default function LoginTemplate() {
   const { register, handleSubmit, watch, setValue } = useForm<TFormValues>();
   const router = useRouter();
   const cpfValue = watch('cpf');
@@ -48,7 +48,7 @@ export default function HomePageTemplate() {
         onSubmit={handleSubmit(onSubmit)}
         className="mt-10 flex flex-col items-center justify-center gap-4 rounded-lg border border-green-700 p-10"
       >
-        <Label isRequired={true}>
+        <Label text='Digite seu cpf' isRequired={true}>
           <Input
             field={register('cpf')}
             required={true}

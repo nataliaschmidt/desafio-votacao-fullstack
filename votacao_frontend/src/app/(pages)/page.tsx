@@ -1,5 +1,5 @@
-import HomePageTemplate from '../templates/HomePageTemplate/HomePageTemplate';
+import LoginTemplate from '../templates/LoginTemplate/LoginTemplate';
 
 export default function LoginPage() {
-  return <HomePageTemplate />;
+  return <LoginTemplate />;
 }
