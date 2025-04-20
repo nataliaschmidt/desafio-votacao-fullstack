@@ -8,7 +8,12 @@ interface SelectProps
   required?: boolean;
 }
 
-export default function Select({ field, options, required, ...props }: SelectProps) {
+export default function Select({
+  field,
+  options,
+  required,
+  ...props
+}: SelectProps) {
   return (
     <select
       className="focus:transparent mt-2 w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-800 placeholder-gray-400 transition-colors focus:border-green-700 focus:text-gray-800 focus:outline-none"

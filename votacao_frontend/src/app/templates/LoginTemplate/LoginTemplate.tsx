@@ -48,7 +48,7 @@ export default function LoginTemplate() {
         onSubmit={handleSubmit(onSubmit)}
         className="mt-10 flex flex-col items-center justify-center gap-4 rounded-lg border border-green-700 p-10"
       >
-        <Label text='Digite seu cpf' isRequired={true}>
+        <Label text="Digite seu cpf" isRequired={true}>
           <Input
             field={register('cpf')}
             required={true}
