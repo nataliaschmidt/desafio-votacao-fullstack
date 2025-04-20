@@ -1,19 +1,17 @@
 'use client';
 
+import { useGetAllAgendas } from '@/app/api/hookService/useAgendaService';
+import { useCreateSection } from '@/app/api/hookService/useSectionService';
 import Button from '@/app/components/Button';
 import Container from '@/app/components/Container';
 import Input from '@/app/components/Input';
 import Label from '@/app/components/Label';
 import Select from '@/app/components/Select';
-import React from 'react';
+import Spinner from '@/app/components/Spinner';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-
-const MOCKPautas = [
-  { value: 1, label: 'Orçamento' },
-  { value: 2, label: 'Novos recursos' },
-  { value: 3, label: 'Honorários' },
-  { value: 4, label: 'Horário da Daily' },
-];
+import { Toast, ToastTypeEnum } from '@/app/components/Toast';
 
 type TDataForm = {
   duration: number | null;
@@ -26,12 +24,39 @@ const defaultValueForm: TDataForm = {
 };
 
 export default function CreateSessionTemplate() {
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const router = useRouter();
+
+  const { data: allAgendas } = useGetAllAgendas({ sortByName: true });
+  const { mutate: createSection, isPending } = useCreateSection();
+
+  const agendaOptions = React.useMemo(() => {
+    return (
+      allAgendas?.map((agenda) => ({
+        value: agenda.id,
+        label: agenda.name,
+      })) ?? []
+    );
+  }, [allAgendas]);
+
   const { handleSubmit, register } = useForm<TDataForm>({
     defaultValues: defaultValueForm,
   });
 
   const onSubmit = (data: TDataForm) => {
-    console.log('Form Data:', data);
+    const handleSuccess = () => {
+      router.push('/sessoes');
+    };
+
+    const handleError = (error: Error) => {
+      setErrorMessage(error.message);
+    };
+
+    createSection(data, {
+      onSuccess: handleSuccess,
+      onError: handleError,
+    });
   };
   return (
     <div className="mt-10 md:mx-auto md:w-96">
@@ -43,7 +68,7 @@ export default function CreateSessionTemplate() {
           <Label text="Selecione uma pauta" isRequired>
             <Select
               field={register('agendaId')}
-              options={MOCKPautas}
+              options={agendaOptions}
               required={true}
             />
           </Label>
@@ -54,9 +79,16 @@ export default function CreateSessionTemplate() {
               placeholder="Digite o tempo de duração da sessão"
             />
           </Label>
-          <Button>Salvar</Button>
+          <Button>{isPending ? <Spinner size={32} /> : 'Salvar'}</Button>
         </form>
       </Container>
+      {errorMessage && (
+        <Toast
+          type={ToastTypeEnum.ERROR}
+          message={errorMessage}
+          onClose={() => setErrorMessage('')}
+        />
+      )}
     </div>
   );
 }

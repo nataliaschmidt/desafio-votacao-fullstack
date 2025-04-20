@@ -1,5 +1,5 @@
-import { IAgenda } from "./agenda";
-import { IVote } from "./vote";
+import { IAgenda } from './agenda';
+import { IVote } from './vote';
 
 export interface ISection {
   id: number;
@@ -9,3 +9,5 @@ export interface ISection {
   start: Date;
   votes: IVote[];
 }
+
+export type TSectionBody = Pick<ISection, 'agendaId', 'duration'>;

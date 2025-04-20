@@ -4,7 +4,11 @@ export interface IVote {
   voteOption: VoteOptionEnum;
 }
 
-enum VoteOptionEnum {
+export enum VoteOptionEnum {
   SIM = 'SIM',
   NAO = 'NAO',
 }
+
+export type TVoteBody = Pick<IVote, 'cpf' | 'voteOption'> & {
+  sectionId: number;
+};

@@ -1,85 +1,73 @@
 'use client';
 
-import { UseGetAllOpenSections } from '@/app/api/services/sectionService';
+import { useGetAllOpenSections } from '@/app/api/hookService/useSectionService';
+import { ISection } from '@/app/api/types/section';
 import Button from '@/app/components/Button';
 import Container from '@/app/components/Container';
+import Modal from '@/app/components/Modal';
+import Spinner from '@/app/components/Spinner';
 import { useRouter } from 'next/navigation';
-import React from 'react';
-
-const MOCKSESSION = [
-  {
-    name: 'Pauta lalalallalalalalalallalalalalalallalaalalalalal',
-    duration: '60',
-    start: '2025-04-20T02:23:54.860Z',
-    end: '2025-04-20T02:23:54.860Z',
-  },
-  {
-    name: 'Pauta',
-    duration: '60',
-    start: '2025-04-20T02:23:54.860Z',
-    end: '2025-04-20T02:23:54.860Z',
-  },
-  {
-    name: 'Pauta',
-    duration: '60',
-    start: '2025-04-20T02:23:54.860Z',
-    end: '2025-04-20T02:23:54.860Z',
-  },
-  {
-    name: 'Pauta',
-    duration: '60',
-    start: '2025-04-20T02:23:54.860Z',
-    end: '2025-04-20T02:23:54.860Z',
-  },
-  {
-    name: 'Pauta',
-    duration: '60',
-    start: '2025-04-20T02:23:54.860Z',
-    end: '2025-04-20T02:23:54.860Z',
-  },
-];
+import React, { useState } from 'react';
+import AgendaForm from './components/AgendaForm';
+import SectionCard from './components/SectionCard';
+import VoteForm from './components/VoteForm';
 
 export default function ListSessionOpenTemplate() {
+  const [openModalAgenda, setOpenModalAgenda] = useState<boolean>(false);
+  const [openModalVote, setOpenModalVote] = useState<boolean>(false);
+  const [selectedSection, setSelectedSection] = useState<number | null>(null);
+
   const router = useRouter();
 
-  const { data: allOpenSections, isLoading } = UseGetAllOpenSections();
+  const { data: allOpenSections, isLoading } = useGetAllOpenSections();
+
+  const onVoteClick = (id: number) => {
+    setSelectedSection(id);
+    setOpenModalVote(true);
+  };
 
   return (
     <>
-      <div className="my-10">
+      <div className="my-10 flex flex-col items-start gap-4">
+        <Button onClick={() => setOpenModalAgenda(true)}>
+          Criar nova pauta
+        </Button>
         <Button onClick={() => router.push('/sessoes/novasessao')}>
           Criar nova seção
         </Button>
       </div>
-      <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
-        {
-          !allOpenSections ? <p>Não foi possível carregar as sessões</p> : allOpenSections.length > 0 ? (
-            allOpenSections?.map((session, index) => (
-              <Container key={index}>
-                <div className="flex h-full w-full flex-col items-start justify-center gap-2 p-4 text-center shadow-lg">
-                  <p className="w-full truncate text-left" title={session?.agendaId?.name}>
-                    <strong>Pauta:</strong> {session?.agendaId?.name}
-                  </p>
-                  <p>
-                    <strong>Duração:</strong> {session?.duration} minutos
-                  </p>
-                  <p>
-                    <strong>Início:</strong>{' '}
-                    {new Date(session?.start).toLocaleString()}
-                  </p>
-                  <p>
-                    <strong>Fim:</strong> {new Date(session?.end).toLocaleString()}
-                  </p>
-                  <div className="self-center">
-                    <Button>Votar</Button>
-                  </div>
-                </div>
+      {isLoading ? (
+        <div className="flex justify-center">
+          <Spinner size={120} />
+        </div>
+      ) : (
+        <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
+          {!allOpenSections ? (
+            <p>Não foi possível carregar as sessões</p>
+          ) : allOpenSections.length > 0 ? (
+            allOpenSections?.map((section: ISection) => (
+              <Container key={section.id}>
+                <SectionCard onclick={onVoteClick} section={section} />
               </Container>
             ))
-          ) : <p>Não há sessões cadastradas</p>
-        }
-  
-      </div>
+          ) : (
+            <p>Não há sessões cadastradas</p>
+          )}
+        </div>
+      )}
+      {openModalAgenda && (
+        <Modal onCancel={() => setOpenModalAgenda(false)}>
+          <AgendaForm setOpenModalAgenda={setOpenModalAgenda} />
+        </Modal>
+      )}
+      {openModalVote && (
+        <Modal onCancel={() => setOpenModalVote(false)}>
+          <VoteForm
+            setOpenModalVote={setOpenModalVote}
+            selectedSection={selectedSection}
+          />
+        </Modal>
+      )}
     </>
   );
 }
