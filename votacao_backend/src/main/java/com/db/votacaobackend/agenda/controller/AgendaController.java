@@ -31,7 +31,7 @@ public class AgendaController {
 
   @PostMapping
   @Operation(
-      summary = "Create new agenda",
+      summary = "Criação de uma nova pauta",
       requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
           content = @Content(
               mediaType = "application/json",
@@ -41,17 +41,10 @@ public class AgendaController {
       )
   )
   @ApiResponses({
-      @ApiResponse(
-          responseCode = "201",
-          description = "Agenda created successfully",
-          content = @Content(
-              mediaType = "application/json",
-              schema = @Schema(implementation = AgendaDTO.class)
-          )
-      ),
+      @ApiResponse(responseCode = "201", description = "Pauta criada com sucesso"),
       @ApiResponse(
           responseCode = "400",
-          description = "'name' field not provided",
+          description = "Criação de uma pauta sem nome especificado",
           content = @Content(
               mediaType = "application/json",
               schema = @Schema(implementation = ErrorResponse.class),
@@ -69,7 +62,7 @@ public class AgendaController {
 
   @GetMapping
   @Operation(
-      summary = "List agendas"
+      summary = "Lista todas as pautas"
   )
   public ResponseEntity<List<AgendaDTO>> listAllAgendas() {
     List<Agenda> allAgendas = service.listAllAgendas();

@@ -63,7 +63,11 @@ public class VoteService {
   }
 
   public VoteResultsDTO listVotesFromSession(Long sectionId) {
-    List<Vote> sectionVotes = repository.findBySectionId(sectionId);
+
+    Section sectionById =  sectionService.getById(sectionId);
+
+    List<Vote> sectionVotes = sectionById.getVotes();
+
     long simCount = sectionVotes.stream()
         .filter(v -> v.getVoteOption() == VoteOption.SIM)
         .count();
