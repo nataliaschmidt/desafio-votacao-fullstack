@@ -9,10 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.db.votacaobackend.agenda.model.Agenda;
 import com.db.votacaobackend.agenda.service.AgendaService;
 import com.db.votacaobackend.section.dto.CreateSectionDTO;
-import com.db.votacaobackend.section.model.Section;
 import com.db.votacaobackend.section.repository.SectionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
