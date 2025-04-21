@@ -1,9 +1,9 @@
 package com.db.votacaobackend.agenda.controller;
 
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -11,6 +11,7 @@ import com.db.votacaobackend.agenda.dto.AgendaDTO;
 import com.db.votacaobackend.agenda.model.Agenda;
 import com.db.votacaobackend.agenda.repository.AgendaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,13 @@ class AgendaControllerTest {
   @Autowired
   private ObjectMapper objectMapper;
 
+  @AfterEach
+  void clean() {
+    agendaRepository.deleteAll();
+  }
+
   @Test
-  @DisplayName("Test create agenda")
+  @DisplayName("Test create agenda success")
   void testCreateAgendaSuccess() throws Exception {
     AgendaDTO requestDto = new AgendaDTO(null, "Realização de testes");
 
@@ -44,7 +50,7 @@ class AgendaControllerTest {
             .content(objectMapper.writeValueAsString(requestDto)))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.id").exists())
-        .andExpect(jsonPath("$.name", is("Realização de testes")));
+        .andExpect(jsonPath("$.name").value("Realização de testes"));
   }
 
   @Test
@@ -73,7 +79,7 @@ class AgendaControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$", hasSize(2)))
-        .andExpect(jsonPath("$[0].name", is("Reunião de planejamento")))
-        .andExpect(jsonPath("$[1].name", is("Votos para orçamento")));
+        .andExpect(jsonPath("$[0].name").value("Reunião de planejamento"))
+        .andExpect(jsonPath("$[1].name").value("Votos para orçamento"));
   }
 }
